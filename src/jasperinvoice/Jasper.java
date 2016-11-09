@@ -31,16 +31,16 @@ import org.icepdf.core.exceptions.PDFSecurityException;
 public class Jasper {
     private Connection conn; //objet de connexion à la BDD
     private Statement stat;
-    private String createQuery() {
-        String query = "select pro.codebarre as id , pro.libelle as name, pv.prix as price "
-                + "from produit pro "
-                + "join prixdevente pv on pro.codebarre = pv.codebarre "
-                + "where pro.codebarre = 16 or pro.codebarre = 14;";
-
-       
-        System.out.println(query);
-        return query;
-    }
+    private static  String INVOICE_QUERY = 
+            "select pro.codebarre as id , pro.libelle as name, pv.prix as price, "
+            + "mag.nomMagasin as shopname, mag.adresse as adres, mag.codepostal as postalcode, mag.commune as commune, mag.tel as tel, mag.tva as tva, "
+            + "cli.idClient as clientid, cli.nomSociete as clientsocietyname, cli.adresse as clientadress, "
+            + "cli.codepostal as clientpostalcode, cli.commune as clientcommune, cli.tel as clienttel, "
+            + "cli.tva as clienttva from produit pro join prixdevente pv on pro.codebarre = pv.codebarre "
+            + "join magasin mag on mag.idmag = pv.idmag "
+            + "join client cli on cli.idmag = mag.idmag "
+            + "limit 50";
+    
 
     public void generatePdf() throws SQLException, JRException, PDFException, PDFSecurityException, IOException, PrintException {
         String DBPath = "src/extraVideoDB.db";
@@ -55,22 +55,15 @@ public class Jasper {
 
         }
 
-        String query = "select pro.codebarre as id , pro.libelle as name, pv.prix as price, mag.nomMagasin as "
-                + "shopname, mag.adresse as adres, mag.codepostal as postalcode, mag.tva as tva " 
-                + "from produit pro " 
-                + "join prixdevente pv on pro.codebarre = pv.codebarre "
-                + "join magasin mag on mag.idmag = pv.idmag " 
-                + "limit 10"; 
-
                 
 
-   
+        System.out.println(INVOICE_QUERY);
        
 
         // - Paramètres à envoyer au rapport
         Map parameters = new HashMap();
-        parameters.put("query", query);
-       
+        parameters.put("query", INVOICE_QUERY);
+        parameters.put("test", "F A C T U R E");
         parameters.put("reference", 1);
 
         FileInputStream fis = new FileInputStream("src/invoice.jasper"); 
