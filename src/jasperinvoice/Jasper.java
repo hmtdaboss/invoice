@@ -33,13 +33,14 @@ public class Jasper {
     private Statement stat;
     private static  String INVOICE_QUERY = 
             "select pro.codebarre as id , pro.libelle as name, pv.prix as price, "
-            + "mag.nomMagasin as shopname, mag.adresse as adres, mag.codepostal as postalcode, mag.commune as commune, mag.tel as tel, mag.tva as tva, "
+            + "mag.nomMagasin as shopname, mag.adresse as adres, mag.codepostal as postalcode, "
+            + "mag.commune as commune, mag.tel as tel, mag.tva as tva, mag.mail as mail, "
             + "cli.idClient as clientid, cli.nomSociete as clientsocietyname, cli.adresse as clientadress, "
             + "cli.codepostal as clientpostalcode, cli.commune as clientcommune, cli.tel as clienttel, "
             + "cli.tva as clienttva from produit pro join prixdevente pv on pro.codebarre = pv.codebarre "
             + "join magasin mag on mag.idmag = pv.idmag "
             + "join client cli on cli.idmag = mag.idmag "
-            + "limit 50";
+            + "limit 20";
     
 
     public void generatePdf() throws SQLException, JRException, PDFException, PDFSecurityException, IOException, PrintException {
